@@ -2,6 +2,7 @@ const courseModel = require("../models/courseModel.js");
 const jwt = require("jsonwebtoken")
 const studentSchema = require("../models/studentSchema.js")
 const TeacherAssignmentSchema = require("../models/TeacherAssignmentSubmission.js")
+const dotenv = require('dotenv').config();
 
 const courseUploadingByTeacher = async (req, res) => {
   const { title, description, posts } = req.body; // 'students' is not needed since all students will be updated
@@ -9,7 +10,7 @@ const courseUploadingByTeacher = async (req, res) => {
 
   try {
     if (token) {
-      const verifiedToken = jwt.verify(token, "secret");
+      const verifiedToken = jwt.verify(token, process.env.secretKey);
 
       // Create the new course
       const newCourse = await courseModel.create({

@@ -1,6 +1,7 @@
 const studentSchema = require("../models/studentSchema.js");
 const studentAssignmentSchema = require("../models/studentAssignmetnSchema.js")
 const jwt = require("jsonwebtoken");
+const dotenv = require('dotenv').config();
 
 const studentUploadingAssignment = async (req, res) => {
     const { student, title, description, fileUrl } = req.body;
@@ -9,7 +10,7 @@ const studentUploadingAssignment = async (req, res) => {
     try {
       if (token) {
         // Verify the token
-        jwt.verify(token, "secret", {}, async (err, usertoken) => {
+        jwt.verify(token, process.env.secretKey, {}, async (err, usertoken) => {
           if (err) {
             return res.status(403).json({ message: "Invalid token" }); // Handle token error
           }
@@ -52,7 +53,7 @@ const studentUploadingAssignment = async (req, res) => {
     try {
       if (token) {
         // Verify the token
-        jwt.verify(token, "secret", {}, async (err, usertoken) => {
+        jwt.verify(token, process.env.secretKey, {}, async (err, usertoken) => {
           if (err) {
             return res.status(403).json({ message: "Invalid token" }); // Handle token error
           }

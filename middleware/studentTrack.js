@@ -1,11 +1,13 @@
 const jwt = require("jsonwebtoken");
 const studentSchema = require("../models/studentSchema.js")
+const dotenv = require('dotenv').config();
+
 const StudentTracking = async (req, res, next) => {
   const { token } = req.cookies; // Get the token from cookies
   console.log(token);
   
   if (token) {
-    jwt.verify(token, "secret", {}, async (err, usertoken) => {
+    jwt.verify(token,process.env.secretKey, {}, async (err, usertoken) => {
       if (err) {
         return res.status(403).json({ message: "Invalid token" }); // Handle token error
       }

@@ -1,12 +1,15 @@
 const userModel = require("../models/authModel.js");
 const jwt = require("jsonwebtoken");
 const adminSchema = require("../models/adminSchema.js")
+const dotenv = require('dotenv').config();
+
+
 const TeacherTracking = async (req, res, next) => {
   const { token } = req.cookies; // Get the token from cookies
   console.log(token);
   
   if (token) {
-    jwt.verify(token, "secret", {}, async (err, usertoken) => {
+    jwt.verify(token, process.env.secretKey, {}, async (err, usertoken) => {
       if (err) {
         return res.status(403).json({ message: "Invalid token" }); // Handle token error
       }

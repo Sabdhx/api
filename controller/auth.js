@@ -4,6 +4,8 @@ const userModel = require('../models/authModel.js');
 const jwt = require("jsonwebtoken")
 const studentSchema = require("../models/studentSchema.js")
 const adminModel = require("../models/adminSchema.js")
+const dotenv = require('dotenv').config();
+
 const customError = (statusCode, message) => {
   const error = new Error(message);
   error.statusCode = statusCode;
@@ -46,7 +48,7 @@ const signIn = async (req, res, next) => {
       }
       
       // Generate JWT token for admin
-      const token = jwt.sign({ id: adminUser._id, role: 'admin' }, process.env.JWT_SECRET || "secret", { expiresIn: "1d" });
+      const token = jwt.sign({ id: adminUser._id, role: 'admin' }, process.env.secretKey , { expiresIn: "1d" });
 
       // Set the token as a cookie
       res.cookie("token", token, {
@@ -80,7 +82,7 @@ const signIn = async (req, res, next) => {
     const { password: hashedPassword, ...userData } = validUser._doc;
 
     // Generate JWT token for student
-    const token = jwt.sign({ id: validUser._id, role: 'student' }, process.env.JWT_SECRET || "secret", { expiresIn: "1d" });
+    const token = jwt.sign({ id: validUser._id, role: 'student' }, process.env.secretKey, { expiresIn: "1d" });
 
     // Set the token as a cookie
     res.cookie("token", token, {
@@ -106,7 +108,7 @@ const signIn = async (req, res, next) => {
   const { token } = req.cookies;
   console.log(token)
   if (token) {
-    jwt.verify(token,"secret", {}, async (err, usertoken) => {
+    jwt.verify(token,process.env.secretKey, {}, async (err, usertoken) => {
       if (err) throw err;
       const { userName, email, _id} = await userModel.findById(
         usertoken.id
